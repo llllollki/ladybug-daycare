@@ -3,15 +3,655 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ladybug Daycare - Admin CMS</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Ladybug Daycare | Quality Childcare & Early Education</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Ladybug Daycare offers nurturing, quality childcare and early education for infants, toddlers, and preschoolers.">
+    <meta name="keywords" content="daycare, childcare, preschool, early education, infant care, toddler care">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2d3436;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #e63946, #d62828);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav button, nav a {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav button:hover, nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .admin-btn {
+            background: white !important;
+            color: #e63946 !important;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #e63946dd, #d62828dd);
+            color: white;
+            text-align: center;
+            padding: 150px 2rem 100px;
+            margin-top: 70px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: #f77f00;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #e63946;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #e63946;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #f77f00;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            color: #e63946;
+            margin-bottom: 1rem;
+        }
+        
+        /* Programs */
+        .programs-section {
+            background: #fff5f5;
+            padding: 4rem 0;
+        }
+        
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .program-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .program-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .program-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #e63946, #d62828);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .program-content {
+            padding: 1.5rem;
+        }
+        
+        .program-card h3 {
+            color: #e63946;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Testimonials */
+        .testimonials-section {
+            background: linear-gradient(135deg, #e63946, #d62828);
+            color: white;
+            padding: 4rem 0;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+        
+        .admin-panel.active {
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #e63946;
+            color: white;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #e63946;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        /* Login Modal */
+        .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-modal.active {
+            display: flex;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .sidebar {
+                width: 200px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel">
-        // Paste the entire React code from the artifact here
+    <!-- Public Website -->
+    <div id="publicSite">
+        <header>
+            <nav>
+                <div class="logo">
+                    🐞 Ladybug Daycare
+                </div>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#programs">Programs</a></li>
+                    <li><button class="admin-btn" onclick="showLogin()">Admin</button></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <h1 id="heroTitle">Where Little Ones Thrive & Grow</h1>
+            <p id="heroSubtitle">Quality childcare and early education in a nurturing, safe environment</p>
+            <div>
+                <button class="btn btn-primary">Schedule a Tour</button>
+                <button class="btn btn-secondary">Our Programs</button>
+            </div>
+        </section>
+
+        <section class="container" id="about">
+            <h2 class="section-title">Why Choose Ladybug Daycare?</h2>
+            <div class="features-grid" id="featuresGrid">
+                <div class="feature-card">
+                    <div class="feature-icon">👶</div>
+                    <h3>Experienced Caregivers</h3>
+                    <p>Our loving, qualified staff provides personalized attention to every child</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Educational Programs</h3>
+                    <p>Age-appropriate curriculum that promotes cognitive, social, and emotional development</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Safe Environment</h3>
+                    <p>State-licensed facility with secure entry and comprehensive safety protocols</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍎</div>
+                    <h3>Nutritious Meals</h3>
+                    <p>Healthy, balanced meals and snacks prepared fresh daily</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Creative Activities</h3>
+                    <p>Art, music, outdoor play, and hands-on learning experiences</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Parent Communication</h3>
+                    <p>Daily updates, photos, and regular progress reports</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="programs-section" id="programs">
+            <div class="container">
+                <h2 class="section-title">Our Programs</h2>
+                <div class="programs-grid">
+                    <div class="program-card">
+                        <div class="program-image">👶</div>
+                        <div class="program-content">
+                            <h3>Infant Care</h3>
+                            <p><strong>6 weeks - 18 months</strong></p>
+                            <p>Nurturing care with focus on sensory development, bonding, and routine establishment</p>
+                        </div>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-image">🧸</div>
+                        <div class="program-content">
+                            <h3>Toddler Program</h3>
+                            <p><strong>18 months - 3 years</strong></p>
+                            <p>Active learning through play, language development, and socialization</p>
+                        </div>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-image">🎒</div>
+                        <div class="program-content">
+                            <h3>Preschool</h3>
+                            <p><strong>3 - 5 years</strong></p>
+                            <p>Kindergarten preparation with early literacy, math concepts, and social skills</p>
+                        </div>
+                    </div>
+                    <div class="program-card">
+                        <div class="program-image">🌞</div>
+                        <div class="program-content">
+                            <h3>After-School Care</h3>
+                            <p><strong>5 - 12 years</strong></p>
+                            <p>Homework help, enrichment activities, and supervised recreation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section">
+            <div class="container">
+                <h2 class="section-title" style="color: white;">What Parents Say</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial">
+                        <p style="font-style: italic; margin-bottom: 1rem;">"Ladybug Daycare has been a blessing for our family. The teachers are caring and professional, and my daughter has learned so much!"</p>
+                        <p style="font-weight: bold;">- Sarah M.</p>
+                    </div>
+                    <div class="testimonial">
+                        <p style="font-style: italic; margin-bottom: 1rem;">"We love the daily updates and photos. It gives us peace of mind knowing our son is safe, happy, and learning every day."</p>
+                        <p style="font-weight: bold;">- James & Lisa K.</p>
+                    </div>
+                    <div class="testimonial">
+                        <p style="font-style: italic; margin-bottom: 1rem;">"The curriculum is excellent and age-appropriate. Our child was fully prepared for kindergarten thanks to the preschool program!"</p>
+                        <p style="font-weight: bold;">- Maria G.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Ladybug Daycare. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://www.facebook.com/ladybugdaycare/" target="_blank">📘</a>
+                <a href="#" target="_blank">📷</a>
+                <a href="#" target="_blank">🐦</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-box">
+            <h2 style="text-align: center; color: #e63946; margin-bottom: 2rem;">Admin Login</h2>
+            <label>
+                Password:
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </label>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="login()">Login</button>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="closeLogin()">Cancel</button>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666; text-align: center;">Demo password: admin123</p>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="sidebar">
+            <h2>⚙️ Admin Panel</h2>
+            <button onclick="showSettings()">⚙️ Settings</button>
+            <button onclick="showEditor()">✏️ Edit Content</button>
+            <button onclick="backToSite()">👁️ View Site</button>
+            <button onclick="logout()" style="margin-top: 2rem; background: #c62828;">🚪 Logout</button>
+        </div>
+        <div class="admin-content">
+            <div id="settingsView" class="hidden">
+                <h1>Site Settings</h1>
+                <div class="card">
+                    <h3>Contact Information</h3>
+                    <label>
+                        Phone:
+                        <input type="text" id="settingsPhone" value="(555) 123-4567">
+                    </label>
+                    <label>
+                        Email:
+                        <input type="email" id="settingsEmail" value="info@ladybugdaycare.com">
+                    </label>
+                    <label>
+                        Address:
+                        <input type="text" id="settingsAddress" value="123 Main Street, Your City, State 12345">
+                    </label>
+                    <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                </div>
+            </div>
+
+            <div id="editorView" class="hidden">
+                <h1>Edit Content</h1>
+                <div class="card">
+                    <h3>Hero Section</h3>
+                    <label>
+                        Hero Title:
+                        <input type="text" id="editHeroTitle" value="Where Little Ones Thrive & Grow">
+                    </label>
+                    <label>
+                        Hero Subtitle:
+                        <textarea id="editHeroSubtitle" rows="3">Quality childcare and early education in a nurturing, safe environment</textarea>
+                    </label>
+                    <button class="btn btn-primary" onclick="saveContent()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login functionality
+        function showLogin() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function closeLogin() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function login() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === 'admin123') {
+                document.getElementById('publicSite').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('active');
+                closeLogin();
+                showSettings();
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+
+        function logout() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('publicSite').style.display = 'block';
+        }
+
+        function backToSite() {
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('publicSite').style.display = 'block';
+        }
+
+        // Admin panel navigation
+        function showSettings() {
+            document.getElementById('settingsView').classList.remove('hidden');
+            document.getElementById('editorView').classList.add('hidden');
+        }
+
+        function showEditor() {
+            document.getElementById('editorView').classList.remove('hidden');
+            document.getElementById('settingsView').classList.add('hidden');
+        }
+
+        // Save functions
+        function saveSettings() {
+            alert('Settings saved successfully!');
+        }
+
+        function saveContent() {
+            const title = document.getElementById('editHeroTitle').value;
+            const subtitle = document.getElementById('editHeroSubtitle').value;
+            
+            document.getElementById('heroTitle').textContent = title;
+            document.getElementById('heroSubtitle').textContent = subtitle;
+            
+            alert('Content updated successfully!');
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Enter key login
+        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
     </script>
 </body>
 </html>
