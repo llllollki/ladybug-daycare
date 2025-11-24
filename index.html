@@ -446,6 +446,68 @@
             margin-top: 1rem;
         }
         
+        .image-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .image-preview-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .image-preview-item.selected {
+            border: 3px solid #e63946;
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3);
+        }
+        
+        .image-preview-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+        }
+        
+        .image-preview-item .remove-image:hover {
+            opacity: 1;
+        }
+        
+        .page-images-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .page-images-display img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
         @media (max-width: 768px) {
             nav ul {
                 gap: 1rem;
@@ -576,11 +638,50 @@
                 </div>
 
                 <div class="card">
+                    <h3>📷 Page Images</h3>
+                    <label>
+                        Upload Images:
+                        <input type="file" id="pageImages" accept="image/*" multiple onchange="handleImageUpload(event)" style="padding: 1rem; border: 2px dashed #e63946; background: #fff5f5;">
+                    </label>
+                    <div id="imagePreview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <!-- Image previews will appear here -->
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+                        <button class="btn btn-secondary btn-small" onclick="moveImageUp()" style="padding: 0.5rem;">⬆️ Move Up</button>
+                        <button class="btn btn-secondary btn-small" onclick="moveImageDown()" style="padding: 0.5rem;">⬇️ Move Down</button>
+                        <span style="color: #666; font-size: 0.9rem;">Select an image, then reorder</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎨 Page Theme (Optional)</h3>
+                    <label>
+                        <input type="checkbox" id="useCustomTheme" onchange="toggleCustomTheme()"> Use custom theme for this page only
+                    </label>
+                    <div id="customThemeOptions" style="display: none; margin-top: 1rem;">
+                        <label>
+                            Page Theme:
+                            <select id="pageTheme">
+                                <option value="">Use Site Default</option>
+                                <option value="blue">Blue & White</option>
+                                <option value="green">Green & Fresh</option>
+                                <option value="purple">Purple & Pink</option>
+                                <option value="orange">Orange & Warm</option>
+                                <option value="teal">Teal & Modern</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
                     <h3>Page Content</h3>
                     <label>
                         Main Content:
                         <textarea id="editPageContent" rows="10" placeholder="Write your page content here..."></textarea>
                     </label>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                        💡 Tip: Images uploaded above will appear on your page automatically!
+                    </p>
                 </div>
 
                 <div style="display: flex; gap: 1rem;">
@@ -592,15 +693,45 @@
             <!-- Settings -->
             <div id="settingsView" class="hidden">
                 <h1 style="color: #e63946; margin-bottom: 2rem;">Site Settings</h1>
+                
                 <div class="card">
-                    <h3>General Settings</h3>
+                    <h3>🎨 Site Branding</h3>
                     <label>
                         Site Name:
                         <input type="text" id="siteName" value="Ladybug Daycare">
                     </label>
+                    <label>
+                        Upload Logo:
+                        <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)" style="padding: 1rem; border: 2px dashed #e63946; background: #fff5f5;">
+                    </label>
+                    <div id="logoPreview" style="margin-top: 1rem;">
+                        <p style="color: #666; font-size: 0.9rem;">Current Logo: 🐞 (Default)</p>
+                    </div>
                 </div>
+
                 <div class="card">
-                    <h3>Contact Information</h3>
+                    <h3>🎨 Theme Settings</h3>
+                    <label>
+                        Choose Theme:
+                        <select id="themeSelect" onchange="previewTheme()">
+                            <option value="default">Red & White (Default)</option>
+                            <option value="blue">Blue & White</option>
+                            <option value="green">Green & Fresh</option>
+                            <option value="purple">Purple & Pink</option>
+                            <option value="orange">Orange & Warm</option>
+                            <option value="teal">Teal & Modern</option>
+                        </select>
+                    </label>
+                    <div id="themePreview" style="display: flex; gap: 1rem; margin-top: 1rem; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+                        <div style="width: 50px; height: 50px; border-radius: 8px; background: #e63946;"></div>
+                        <div style="width: 50px; height: 50px; border-radius: 8px; background: #d62828;"></div>
+                        <div style="width: 50px; height: 50px; border-radius: 8px; background: #f77f00;"></div>
+                    </div>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">Theme will be applied to entire site</p>
+                </div>
+                
+                <div class="card">
+                    <h3>📞 Contact Information</h3>
                     <label>
                         Phone:
                         <input type="text" id="settingsPhone" value="(555) 123-4567">
@@ -613,8 +744,37 @@
                         Address:
                         <input type="text" id="settingsAddress" value="123 Main Street, Your City, State 12345">
                     </label>
-                    <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
                 </div>
+
+                <div class="card">
+                    <h3>📱 Social Media Links</h3>
+                    <label>
+                        Facebook URL:
+                        <input type="url" id="facebookUrl" value="https://www.facebook.com/ladybugdaycare/" placeholder="https://facebook.com/your-page">
+                    </label>
+                    <label>
+                        Instagram URL:
+                        <input type="url" id="instagramUrl" value="" placeholder="https://instagram.com/your-page">
+                    </label>
+                    <label>
+                        Twitter URL:
+                        <input type="url" id="twitterUrl" value="" placeholder="https://twitter.com/your-page">
+                    </label>
+                </div>
+
+                <div class="card">
+                    <h3>📄 Footer Text</h3>
+                    <label>
+                        Copyright Text:
+                        <input type="text" id="footerCopyright" value="© 2025 Ladybug Daycare. All rights reserved.">
+                    </label>
+                    <label>
+                        Additional Footer Text:
+                        <textarea id="footerExtra" rows="2" placeholder="e.g., Licensed & Insured Childcare Provider">Licensed & Insured Childcare Provider</textarea>
+                    </label>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveSettings()">💾 Save All Settings</button>
             </div>
         </div>
     </div>
@@ -631,6 +791,7 @@
                     title: 'Where Little Ones Thrive & Grow',
                     subtitle: 'Quality childcare and early education in a nurturing, safe environment'
                 },
+                images: [],
                 content: `<div class="container">
                     <h2 class="section-title">Why Choose Ladybug Daycare?</h2>
                     <div class="features-grid">
@@ -655,11 +816,42 @@
         };
 
         let currentPageId = 'home';
+        let uploadedImages = []; // Temporary storage for images being uploaded
+        let selectedImageIndex = -1; // For reordering images
+        let siteSettings = {
+            siteName: 'Ladybug Daycare',
+            logo: null,
+            theme: 'default',
+            contact: {
+                phone: '(555) 123-4567',
+                email: 'info@ladybugdaycare.com',
+                address: '123 Main Street, Your City, State 12345'
+            },
+            social: {
+                facebook: 'https://www.facebook.com/ladybugdaycare/',
+                instagram: '',
+                twitter: ''
+            },
+            footer: {
+                copyright: '© 2025 Ladybug Daycare. All rights reserved.',
+                extra: 'Licensed & Insured Childcare Provider'
+            }
+        };
+
+        const themes = {
+            default: { primary: '#e63946', secondary: '#d62828', accent: '#f77f00' },
+            blue: { primary: '#0077b6', secondary: '#023e8a', accent: '#00b4d8' },
+            green: { primary: '#52b788', secondary: '#2d6a4f', accent: '#95d5b2' },
+            purple: { primary: '#9d4edd', secondary: '#7209b7', accent: '#c77dff' },
+            orange: { primary: '#ff6d00', secondary: '#dd2c00', accent: '#ff9100' },
+            teal: { primary: '#006d77', secondary: '#004e56', accent: '#83c5be' }
+        };
 
         // Initialize
         console.log('Ladybug Daycare CMS loaded successfully!');
         renderPublicPage('home');
         updatePublicNav();
+        updateHeaderFooter();
 
         // Login functionality
         function showLogin() {
@@ -724,6 +916,8 @@
             document.getElementById('editHeroTitle').value = '';
             document.getElementById('editHeroSubtitle').value = '';
             document.getElementById('editPageContent').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            uploadedImages = [];
         }
 
         function showEditPage(pageId) {
@@ -740,6 +934,111 @@
             document.getElementById('editHeroTitle').value = page.hero?.title || '';
             document.getElementById('editHeroSubtitle').value = page.hero?.subtitle || '';
             document.getElementById('editPageContent').value = extractTextFromHTML(page.content || '');
+            
+            // Load existing images
+            uploadedImages = page.images || [];
+            selectedImageIndex = -1;
+            renderImagePreviews();
+            
+            // Load page theme
+            if (page.customTheme) {
+                document.getElementById('useCustomTheme').checked = true;
+                document.getElementById('pageTheme').value = page.customTheme;
+                toggleCustomTheme();
+            } else {
+                document.getElementById('useCustomTheme').checked = false;
+                document.getElementById('pageTheme').value = '';
+                toggleCustomTheme();
+            }
+        }
+
+        // Handle image upload
+        function handleImageUpload(event) {
+            const files = event.target.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check if it's an image
+                if (!file.type.startsWith('image/')) {
+                    alert('❌ Please upload only image files!');
+                    continue;
+                }
+                
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('❌ Image size should be less than 5MB!');
+                    continue;
+                }
+                
+                // Read the file as base64
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push({
+                        name: file.name,
+                        data: e.target.result
+                    });
+                    renderImagePreviews();
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Clear the input
+            event.target.value = '';
+        }
+
+        function renderImagePreviews() {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            uploadedImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item' + (index === selectedImageIndex ? ' selected' : '');
+                div.onclick = () => selectImage(index);
+                div.innerHTML = `
+                    <img src="${img.data}" alt="${img.name}">
+                    <button class="remove-image" onclick="event.stopPropagation(); removeImage(${index});" title="Remove image">×</button>
+                `;
+                preview.appendChild(div);
+            });
+        }
+
+        function selectImage(index) {
+            selectedImageIndex = index;
+            renderImagePreviews();
+        }
+
+        function moveImageUp() {
+            if (selectedImageIndex > 0) {
+                const temp = uploadedImages[selectedImageIndex];
+                uploadedImages[selectedImageIndex] = uploadedImages[selectedImageIndex - 1];
+                uploadedImages[selectedImageIndex - 1] = temp;
+                selectedImageIndex--;
+                renderImagePreviews();
+            }
+        }
+
+        function moveImageDown() {
+            if (selectedImageIndex >= 0 && selectedImageIndex < uploadedImages.length - 1) {
+                const temp = uploadedImages[selectedImageIndex];
+                uploadedImages[selectedImageIndex] = uploadedImages[selectedImageIndex + 1];
+                uploadedImages[selectedImageIndex + 1] = temp;
+                selectedImageIndex++;
+                renderImagePreviews();
+            }
+        }
+
+        function removeImage(index) {
+            if (confirm('Remove this image?')) {
+                uploadedImages.splice(index, 1);
+                selectedImageIndex = -1;
+                renderImagePreviews();
+            }
+        }
+
+        function toggleCustomTheme() {
+            const useCustom = document.getElementById('useCustomTheme').checked;
+            document.getElementById('customThemeOptions').style.display = useCustom ? 'block' : 'none';
         }
 
         function extractTextFromHTML(html) {
@@ -756,6 +1055,8 @@
             const heroTitle = document.getElementById('editHeroTitle').value.trim();
             const heroSubtitle = document.getElementById('editHeroSubtitle').value.trim();
             const content = document.getElementById('editPageContent').value.trim();
+            const useCustomTheme = document.getElementById('useCustomTheme').checked;
+            const pageTheme = document.getElementById('pageTheme').value;
 
             if (!title) {
                 alert('❌ Please enter a page title!');
@@ -766,6 +1067,23 @@
             const isNew = !pageId;
             const id = pageId || slug;
 
+            // Build content with images
+            let pageContent = '';
+            
+            // Add images if any
+            if (uploadedImages.length > 0) {
+                pageContent += '<div class="page-images-display">';
+                uploadedImages.forEach(img => {
+                    pageContent += `<img src="${img.data}" alt="${img.name}">`;
+                });
+                pageContent += '</div>';
+            }
+            
+            // Add text content
+            if (content) {
+                pageContent += `<div class="container"><div class="card"><p style="white-space: pre-wrap;">${content}</p></div></div>`;
+            }
+
             pages[id] = {
                 id: id,
                 title: title,
@@ -775,7 +1093,9 @@
                     title: heroTitle || title,
                     subtitle: heroSubtitle
                 },
-                content: content ? `<div class="container"><div class="card"><p>${content.replace(/\n/g, '<br>')}</p></div></div>` : ''
+                images: [...uploadedImages],
+                content: pageContent,
+                customTheme: useCustomTheme ? pageTheme : null
             };
 
             alert(isNew ? '✅ Page created successfully!' : '✅ Page updated successfully!');
@@ -802,12 +1122,14 @@
             list.innerHTML = '';
 
             Object.values(pages).forEach(page => {
+                const imageCount = page.images?.length || 0;
                 const item = document.createElement('div');
                 item.className = 'page-item';
                 item.innerHTML = `
                     <h4>${page.title}</h4>
                     <div class="page-slug">/${page.slug}</div>
                     <p style="color: #666; font-size: 0.9rem;">Type: ${page.type || 'hero'}</p>
+                    <p style="color: #666; font-size: 0.9rem;">📷 Images: ${imageCount}</p>
                     <div class="page-actions">
                         <button class="btn btn-primary btn-small" onclick="showEditPage('${page.id}')">✏️ Edit</button>
                         <button class="btn btn-secondary btn-small" onclick="renderPublicPage('${page.id}'); backToSite();">👁️ View</button>
@@ -824,6 +1146,10 @@
 
             currentPageId = pageId;
             const content = document.getElementById('pageContent');
+            
+            // Apply theme (page custom theme or site theme)
+            const theme = page.customTheme ? themes[page.customTheme] : themes[siteSettings.theme];
+            applyTheme(theme);
             
             let html = '';
             
@@ -844,6 +1170,127 @@
             
             content.innerHTML = html;
             window.scrollTo(0, 0);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--secondary', theme.secondary);
+            document.documentElement.style.setProperty('--accent', theme.accent);
+            
+            // Update header gradient
+            const header = document.querySelector('header');
+            if (header) {
+                header.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            }
+        }
+
+        function updateHeaderFooter() {
+            // Update logo and site name
+            const logo = document.querySelector('.logo');
+            if (logo) {
+                if (siteSettings.logo) {
+                    logo.innerHTML = `<img src="${siteSettings.logo}" alt="${siteSettings.siteName}" style="height: 40px; width: auto;"> ${siteSettings.siteName}`;
+                } else {
+                    logo.innerHTML = `🐞 ${siteSettings.siteName}`;
+                }
+            }
+            
+            // Update footer
+            const footer = document.querySelector('footer');
+            if (footer) {
+                footer.innerHTML = `
+                    <p>${siteSettings.footer.copyright}</p>
+                    <div class="social-links">
+                        ${siteSettings.social.facebook ? `<a href="${siteSettings.social.facebook}" target="_blank" title="Facebook">📘</a>` : ''}
+                        ${siteSettings.social.instagram ? `<a href="${siteSettings.social.instagram}" target="_blank" title="Instagram">📷</a>` : ''}
+                        ${siteSettings.social.twitter ? `<a href="${siteSettings.social.twitter}" target="_blank" title="Twitter">🐦</a>` : ''}
+                    </div>
+                    ${siteSettings.footer.extra ? `<p style="margin-top: 1rem; font-size: 0.9rem;">${siteSettings.footer.extra}</p>` : ''}
+                `;
+            }
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Please upload an image file!');
+                return;
+            }
+            
+            if (file.size > 2 * 1024 * 1024) {
+                alert('❌ Logo size should be less than 2MB!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                siteSettings.logo = e.target.result;
+                document.getElementById('logoPreview').innerHTML = `
+                    <img src="${e.target.result}" alt="Logo" style="max-width: 200px; max-height: 80px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <button class="btn btn-danger btn-small" onclick="removeLogo()" style="margin-top: 0.5rem;">Remove Logo</button>
+                `;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function removeLogo() {
+            if (confirm('Remove logo and use default?')) {
+                siteSettings.logo = null;
+                document.getElementById('logoPreview').innerHTML = '<p style="color: #666; font-size: 0.9rem;">Current Logo: 🐞 (Default)</p>';
+            }
+        }
+
+        function previewTheme() {
+            const selectedTheme = document.getElementById('themeSelect').value;
+            const theme = themes[selectedTheme];
+            const preview = document.getElementById('themePreview');
+            preview.innerHTML = `
+                <div style="width: 50px; height: 50px; border-radius: 8px; background: ${theme.primary};"></div>
+                <div style="width: 50px; height: 50px; border-radius: 8px; background: ${theme.secondary};"></div>
+                <div style="width: 50px; height: 50px; border-radius: 8px; background: ${theme.accent};"></div>
+            `;
+        }
+
+        function saveSettings() {
+            siteSettings.siteName = document.getElementById('siteName').value;
+            siteSettings.theme = document.getElementById('themeSelect').value;
+            siteSettings.contact.phone = document.getElementById('settingsPhone').value;
+            siteSettings.contact.email = document.getElementById('settingsEmail').value;
+            siteSettings.contact.address = document.getElementById('settingsAddress').value;
+            siteSettings.social.facebook = document.getElementById('facebookUrl').value;
+            siteSettings.social.instagram = document.getElementById('instagramUrl').value;
+            siteSettings.social.twitter = document.getElementById('twitterUrl').value;
+            siteSettings.footer.copyright = document.getElementById('footerCopyright').value;
+            siteSettings.footer.extra = document.getElementById('footerExtra').value;
+            
+            updateHeaderFooter();
+            updatePublicNav();
+            applyTheme(themes[siteSettings.theme]);
+            
+            alert('✅ Settings saved successfully!');
+        }
+
+        function showSettings() {
+            document.getElementById('settingsView').classList.remove('hidden');
+            document.getElementById('pagesManager').classList.add('hidden');
+            document.getElementById('pageEditor').classList.add('hidden');
+            
+            // Load current settings
+            document.getElementById('siteName').value = siteSettings.siteName;
+            document.getElementById('themeSelect').value = siteSettings.theme;
+            document.getElementById('settingsPhone').value = siteSettings.contact.phone;
+            document.getElementById('settingsEmail').value = siteSettings.contact.email;
+            document.getElementById('settingsAddress').value = siteSettings.contact.address;
+            document.getElementById('facebookUrl').value = siteSettings.social.facebook;
+            document.getElementById('instagramUrl').value = siteSettings.social.instagram;
+            document.getElementById('twitterUrl').value = siteSettings.social.twitter;
+            document.getElementById('footerCopyright').value = siteSettings.footer.copyright;
+            document.getElementById('footerExtra').value = siteSettings.footer.extra;
+            
+            previewTheme();
         }
 
         function updatePublicNav() {
@@ -867,6 +1314,15 @@
             adminBtn.onclick = showLogin;
             adminLi.appendChild(adminBtn);
             nav.appendChild(adminLi);
+            
+            // Update logo
+            updateHeaderFooter();
+        }
+
+        function showSettings() {
+            document.getElementById('settingsView').classList.remove('hidden');
+            document.getElementById('pagesManager').classList.add('hidden');
+            document.getElementById('pageEditor').classList.add('hidden');
         }
 
         function showPage(pageId) {
